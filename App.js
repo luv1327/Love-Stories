@@ -43,7 +43,10 @@ export default function App() {
     return (
       <AuthProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
             <Stack.Screen name="Main" component={Main} />
           </Stack.Navigator>
         </NavigationContainer>
