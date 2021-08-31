@@ -20,12 +20,14 @@ export default function Add({navigation}) {
     title,
     user: {
       username: firestoreUser?.username,
+      id: firestoreUser.email,
     },
     body,
     likes,
     comments,
     types,
     date: new Date(),
+    likedUsers: [],
   };
 
   function addingStory() {

@@ -4,6 +4,7 @@ import Auth from './Auth';
 import Home from './Home';
 import {AuthContext} from '../context/AuthContext';
 import firestore from '@react-native-firebase/firestore';
+import {StoryProvider} from '../context/StoryContext';
 
 export default function Main() {
   const {user, setUser, setFirestoreUser} = useContext(AuthContext);
@@ -32,5 +33,11 @@ export default function Main() {
 
   if (initializing) return null;
 
-  return user ? <Home /> : <Auth />;
+  return user ? (
+    <StoryProvider>
+      <Home />
+    </StoryProvider>
+  ) : (
+    <Auth />
+  );
 }

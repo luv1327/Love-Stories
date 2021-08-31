@@ -26,7 +26,6 @@ export default function SignUp() {
     })
       .then(image => {
         setSelectedImage(image.path);
-        console.log(image);
       })
       .catch(err => console.log(err));
   };

@@ -79,7 +79,7 @@ const AuthProvider = ({children}) => {
         signUp: async () => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);
-            await handleSubmit();
+            handleSubmit();
             await firestore()
               .collection('Users')
               .doc(email)
@@ -89,7 +89,6 @@ const AuthProvider = ({children}) => {
                 stories: [],
                 imageUrl,
               })
-
               .catch(err => console.log(err));
             await firestore()
               .collection('Users')

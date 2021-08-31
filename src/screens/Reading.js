@@ -2,17 +2,17 @@ import React, {useState, createRef, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList, Text, View, TextInput, Pressable, Alert} from 'react-native';
 import Comment from './Comment';
+import Liked from './Liked';
 
 export default function Reading({route}) {
   const [newComment, setNewComment] = useState('');
   const [updatedComments, setUpdatedComments] = useState([]);
-  const {body, title, likes, types, user, key} =
+  const [updatedLikes, setUpdatedLikes] = useState(0);
+  const {body, title, likes, types, user, key, likedUsers, firestoreUser} =
     route.params === undefined ? '' : route.params;
-
   const myTextInput = createRef();
-
   useEffect(() => {
-    const response = firestore()
+    firestore()
       .collection('Stories')
       .doc(key)
       .onSnapshot(documentSnapshot => {
@@ -21,9 +21,18 @@ export default function Reading({route}) {
         }
       });
 
+    firestore()
+      .collection('Stories')
+      .doc(key)
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          setUpdatedLikes(documentSnapshot.data().likedUsers.length);
+        }
+      });
+
     // Stop listening for updates when no longer required
-    return () => response();
   }, [key]);
+
   const addComment = async () => {
     try {
       if (newComment.length > 0) {
@@ -63,7 +72,14 @@ export default function Reading({route}) {
         <View>
           <Text> {body} </Text>
           <Text> {title} </Text>
-          <Text> {likes} </Text>
+          <Liked
+            user={user}
+            id={key}
+            likes={likes}
+            likedUsers={likedUsers}
+            firestoreUser={firestoreUser}
+          />
+          <Text> {updatedLikes} </Text>
           <Text> {user.username} </Text>
           <FlatList
             data={types}

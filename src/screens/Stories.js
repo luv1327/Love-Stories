@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
-import firestore from '@react-native-firebase/firestore';
+import React, {useState, useContext} from 'react';
 import Story from './Story';
 import {
   ActivityIndicator,
@@ -9,36 +8,18 @@ import {
   Text,
 } from 'react-native';
 import {AuthContext} from '../context/AuthContext';
+import {StoryContext} from '../context/StoryContext';
 
 export default function Stories({navigation}) {
-  const [loading, setLoading] = useState(true);
-  const [stories, setStories] = useState([]);
   const [type, setType] = useState('All');
   const {logout} = useContext(AuthContext);
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection('Stories')
-      .onSnapshot(querySnapshot => {
-        const stories = [];
-        querySnapshot.forEach(documentSnapshot => {
-          stories.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-        const sortedStoriesByDate = stories.sort((a, b) => b.date - a.date);
-        setStories(sortedStoriesByDate);
-        setLoading(false);
-      });
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, []);
-
-  const renderItem = ({item}) => <Story item={item} navigation={navigation} />;
-
+  const {stories, loading} = useContext(StoryContext);
   const filteredStories = stories.filter(story => {
     return story.types.includes(type);
   });
+
+  const renderItem = ({item}) => <Story item={item} navigation={navigation} />;
+
   if (loading) {
     return <ActivityIndicator />;
   }
