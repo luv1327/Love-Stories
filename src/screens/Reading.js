@@ -1,8 +1,9 @@
 import React, {useState, createRef, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList, Text, View, TextInput, Pressable, Alert} from 'react-native';
-import Comment from './Comment';
-import Liked from './Liked';
+import Comment from '../components/Comment';
+import Liked from '../components/Liked';
+import Bookmark from '../components/Bookmark';
 
 export default function Reading({route}) {
   const [newComment, setNewComment] = useState('');
@@ -104,6 +105,7 @@ export default function Reading({route}) {
           <Pressable onPress={addComment}>
             <Text> Add </Text>
           </Pressable>
+          <Bookmark storyId={key} userId={firestoreUser.email} />
         </View>
       )}
     </View>

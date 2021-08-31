@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import Story from './Story';
+import Story from '../components/Story';
 import {
   ActivityIndicator,
   FlatList,

@@ -5,13 +5,13 @@ import Icon from 'react-native-vector-icons/Entypo';
 
 export default function Liked({id, user, likedUsers, firestoreUser}) {
   const [liked, setLiked] = useState(false);
-  // const [updatedLikes, setUpdatedLikes] = useState(likes);
   useEffect(() => {
     if (likedUsers.includes(firestoreUser.email)) {
       setLiked(true);
     } else {
       setLiked(false);
     }
+    return () => setLiked(false);
   }, [id]);
   const handleLike = async () => {
     try {

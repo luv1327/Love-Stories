@@ -5,6 +5,35 @@ export const StoryContext = createContext();
 export function StoryProvider({children}) {
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState([]);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const handleBookmark = async (userId, storyId) => {
+    try {
+      setBookmarked(prevState => !prevState);
+      if (bookmarked) {
+        await firestore()
+          .collection('Users')
+          .doc(userId)
+          .update({
+            bookmarkedStories: firestore.FieldValue.arrayRemove(storyId),
+          })
+          .then(() => console.log('UnBookmarked Successfully'))
+          .catch(err => console.log(err));
+      } else {
+        await firestore()
+          .collection('Users')
+          .doc(userId)
+          .update({
+            bookmarkedStories: firestore.FieldValue.arrayUnion(storyId),
+          })
+          .then(() => console.log('Bookmarked Successfully'))
+          .catch(err => console.log(err));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const subscriber = firestore()
       .collection('Stories')
@@ -25,7 +54,16 @@ export function StoryProvider({children}) {
   }, []);
 
   return (
-    <StoryContext.Provider value={{loading, setLoading, stories, setStories}}>
+    <StoryContext.Provider
+      value={{
+        loading,
+        setLoading,
+        stories,
+        setStories,
+        handleBookmark,
+        bookmarked,
+        setBookmarked,
+      }}>
       {children}
     </StoryContext.Provider>
   );
