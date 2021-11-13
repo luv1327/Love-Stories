@@ -8,7 +8,9 @@ import {Stack} from './src/components/Navigation';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 
 export default function App() {
+  // change value to false and comment use effect hook for onboarding styling
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+
   useEffect(() => {
     AsyncStorage.getItem('alreadyLaunched').then(value => {
       if (value === null) {
@@ -28,13 +30,19 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="OnboardingScreen"
-            // screenOptions={{headerStyle: 'none'}}
-          >
+            screenOptions={{
+              headerShown: false,
+              cardStyle: {backgroundColor: 'white'},
+            }}>
             <Stack.Screen
               name="OnboardingScreen"
               component={OnboardingScreen}
             />
-            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen
+              name="Main"
+              component={Main}
+              ScreenOptions={{backgroundColor: '#FFFFFE'}}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </AuthProvider>
@@ -46,6 +54,7 @@ export default function App() {
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
+              cardStyle: {backgroundColor: '#FFFFFE'},
             }}>
             <Stack.Screen name="Main" component={Main} />
           </Stack.Navigator>

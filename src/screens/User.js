@@ -1,13 +1,22 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Text, View, Button, Image, Alert} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../context/AuthContext';
+import {StoryContext} from '../context/StoryContext';
 
 export default function User({navigation}) {
   const {firestoreUser} = useContext(AuthContext);
+  const {getBookmarkedStoriesId, bookmarkedStoriesId} =
+    useContext(StoryContext);
   const [image, setImage] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    getBookmarkedStoriesId(firestoreUser.email);
+    console.log(bookmarkedStoriesId);
+  }, []);
+
   const fromCamera = () => {
     ImagePicker.openCamera({
       width: 300,
@@ -52,10 +61,10 @@ export default function User({navigation}) {
   return (
     <View>
       <Text> User Screen </Text>
-      <Image
+      {/* <Image
         style={{height: 300, width: 300}}
         source={{uri: firestoreUser.imageUrl}}
-      />
+      /> */}
       <Image
         source={{
           uri:

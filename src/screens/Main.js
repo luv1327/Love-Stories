@@ -1,10 +1,10 @@
 import React, {useState, useContext, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
-import Auth from './Auth';
 import Home from './Home';
 import {AuthContext} from '../context/AuthContext';
 import firestore from '@react-native-firebase/firestore';
 import {StoryProvider} from '../context/StoryContext';
+import AuthNavigator from './AuthNavigator';
 
 export default function Main() {
   const {user, setUser, setFirestoreUser} = useContext(AuthContext);
@@ -38,6 +38,6 @@ export default function Main() {
       <Home />
     </StoryProvider>
   ) : (
-    <Auth />
+    <AuthNavigator />
   );
 }

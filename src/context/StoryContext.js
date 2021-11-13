@@ -6,6 +6,27 @@ export function StoryProvider({children}) {
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState([]);
   const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkedStoriesId, setBookmarkedStoriesId] = useState([]);
+
+  const getBookmarkedStoriesId = async userId => {
+    try {
+      const response = await firestore().collection('Users').doc(userId).get();
+      setBookmarkedStoriesId(response.data().bookmarkedStories);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const isBookmarked = async (userId, storyId) => {
+    try {
+      const response = await firestore().collection('Users').doc(userId).get();
+      response._data.bookmarkedStories.includes(storyId)
+        ? setBookmarked(true)
+        : setBookmarked(false);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   const handleBookmark = async (userId, storyId) => {
     try {
@@ -63,6 +84,9 @@ export function StoryProvider({children}) {
         handleBookmark,
         bookmarked,
         setBookmarked,
+        isBookmarked,
+        getBookmarkedStoriesId,
+        bookmarkedStoriesId,
       }}>
       {children}
     </StoryContext.Provider>
