@@ -32,6 +32,7 @@ export default function Reading({route}) {
       });
 
     // Stop listening for updates when no longer required
+    return;
   }, [key]);
 
   const addComment = async () => {

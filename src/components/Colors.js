@@ -4,6 +4,7 @@ const colors = {
   subTitleText: '#A9A99E',
   mainText: '#33272A',
   border: '#33272A',
+  borderLightColor: 'lightgrey',
 };
 
 const fonts = {

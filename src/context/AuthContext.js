@@ -17,7 +17,7 @@ const AuthProvider = ({children}) => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
   async function handleSubmit() {
-    const imageUri = selectedImage;
+    const imageUri = selectedImage.toString();
     let filename = imageUri.substring(imageUri.lastIndexOf('/') + 1);
     try {
       await storage().ref(filename).putFile(imageUri);
@@ -87,7 +87,8 @@ const AuthProvider = ({children}) => {
                 username: username.charAt(0).toUpperCase() + username.slice(1),
                 email: email,
                 stories: [],
-                imageUrl,
+                imageUrl: selectedImage.toString(),
+                bookmarkedStories: [],
               })
               .catch(err => console.log(err));
             await firestore()

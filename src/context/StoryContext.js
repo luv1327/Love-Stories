@@ -7,7 +7,6 @@ export function StoryProvider({children}) {
   const [stories, setStories] = useState([]);
   const [bookmarked, setBookmarked] = useState(false);
   const [bookmarkedStoriesId, setBookmarkedStoriesId] = useState([]);
-
   const getBookmarkedStoriesId = async userId => {
     try {
       const response = await firestore().collection('Users').doc(userId).get();
@@ -20,9 +19,10 @@ export function StoryProvider({children}) {
   const isBookmarked = async (userId, storyId) => {
     try {
       const response = await firestore().collection('Users').doc(userId).get();
-      response._data.bookmarkedStories.includes(storyId)
-        ? setBookmarked(true)
-        : setBookmarked(false);
+      console.log('Response', response);
+      // response._data.bookmarkedStories.includes(storyId)
+      //   ? setBookmarked(true)
+      //   : setBookmarked(false);
     } catch (err) {
       console.error(err.message);
     }

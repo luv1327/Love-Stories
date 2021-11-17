@@ -1,5 +1,5 @@
 import React, {useState, useContext, createRef} from 'react';
-import {Text, StyleSheet, Alert, ScrollView} from 'react-native';
+import {Text, StyleSheet, Alert, ScrollView, Image} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../context/AuthContext';
 import {colors, fonts} from '../components/Colors';
@@ -22,13 +22,15 @@ export default function Add({navigation}) {
   const [divorce, setDivorce] = useState(false);
   const [zoned, setZoned] = useState(false);
   const [cheated, setCheated] = useState(false);
-  const [titlePressed, setTitlePressed] = useState(false);
+  const [titlePressed, setTitlePressed] = useState(true);
+  const [storyPressed, setStoryPressed] = useState(false);
 
   const newStory = {
     title,
     user: {
       username: firestoreUser?.username,
       id: firestoreUser.email,
+      image: firestoreUser?.imageUrl,
     },
     body,
     likes,
@@ -90,6 +92,7 @@ export default function Add({navigation}) {
         setBody('');
         setTitle('');
         setTypes([]);
+        setStoryPressed(false);
         removeType(
           'Love',
           'Marriage',
@@ -107,6 +110,14 @@ export default function Add({navigation}) {
   };
 
   const titleBorder = titlePressed
+    ? {
+        borderWidth: 1,
+        borderColor: colors.buttonColor,
+        color: colors.subTitleText,
+      }
+    : {borderWidth: 1, borderColor: colors.border, color: colors.subTitleText};
+
+  const storyBorder = storyPressed
     ? {
         borderWidth: 1,
         borderColor: colors.buttonColor,
@@ -152,9 +163,23 @@ export default function Add({navigation}) {
     !cheated ? setTypes(['Cheated', ...types]) : removeType('Cheated');
   };
 
+  const handleInputTitlePressed = () => {
+    setTitlePressed(true);
+    setStoryPressed(false);
+  };
+
+  const handleInputStoryPressed = () => {
+    setTitlePressed(false);
+    setStoryPressed(true);
+  };
+
   return (
     <ScrollView>
       <Container>
+        <Image
+          style={{height: 50, width: 50}}
+          source={{uri: firestoreUser.imageUrl}}
+        />
         <Text
           style={{fontFamily: fonts.regular, marginTop: 40, marginBottom: 3}}>
           {' '}
@@ -164,7 +189,8 @@ export default function Add({navigation}) {
           onChangeText={title => setTitle(title)}
           ref={clearTitle}
           style={titleBorder}
-          onPressIn={() => setTitlePressed(true)}
+          onPressIn={handleInputTitlePressed}
+          autoFocus={true}
         />
         <TypesContainer>
           <TypesContainerTop>
@@ -212,11 +238,26 @@ export default function Add({navigation}) {
             </Types>
           </TypesContainerBottom>
         </TypesContainer>
-        <Text> Your Story </Text>
+        <Text style={{fontFamily: fonts.regular}}>Story </Text>
+        <Text
+          style={{
+            fontFamily: fonts.regular,
+            color: colors.subTitleText,
+            fontSize: 8,
+            marginLeft: -2,
+          }}>
+          {' '}
+          (Max 500 Characters){' '}
+        </Text>
         <StoryInput
           onChangeText={body => setBody(body)}
           ref={clearBody}
-          onPressIn={() => setTitlePressed(false)}
+          onPressIn={handleInputStoryPressed}
+          style={storyBorder}
+          maxLength={500}
+          multiLine={true}
+          textAlignVertical="top"
+          scrollEnabled={true}
         />
         <AddButton onPress={handleAdd}>
           <Text
@@ -246,9 +287,11 @@ const styles = StyleSheet.create({
 });
 
 const StoryInput = styled.TextInput`
-  height: auto;
-  min-height : 100px
-  border: 1px solid lightgrey;
+  min-height: 300px;
+  max-height: 300px;
+  margin: 5px 0;
+  border-radius: 5px;
+  padding: 10px;
 `;
 
 const AddButton = styled.Pressable`
@@ -278,7 +321,9 @@ const TypesText = styled.Text`
   font-family: ${fonts.regular};
 `;
 
-const TypesContainer = styled.View``;
+const TypesContainer = styled.View`
+  margin-bottom: 10px;
+`;
 
 const Types = styled.Pressable`
   width: 50px;
